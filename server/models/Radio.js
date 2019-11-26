@@ -21,7 +21,7 @@ function update_radio(req, res) {
   if (type === "pos") {
     radios[idxRadio]["N"] += 1;
   }
-  res.json(radios); 
+  res.json(radios[idxRadio]); 
 }
 
 module.exports = {
