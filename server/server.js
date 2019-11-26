@@ -1,43 +1,18 @@
 const app = require("express")();
+const fs = require("fs");
 const bodyParser = require("body-parser");
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require("mongodb").MongoClient;
+const Radio = require("./models/Radio");
 
-var urlUser = "mongodb://172.16.0.2:27017/userDB";
-var urlRadio = "mongodb://172.16.0.3:27017/radioDB";
-var urlLog = "mongodb://172.16.0.4:27017/logDB";
+const urlUser = "mongodb://root:123@172.16.0.2:27017/";
+const urlRadio = "mongodb://root:123@172.16.0.3:27017/";
+const urlLog = "mongodb://172.16.0.4:27017/";
 
-// MongoClient.connect(urlUser, function(err, dbUser) {
-//     if (err) throw err;
-//     console.log("User database created!");
-//     var dbo = dbUser.db("userDB");
-//     dbo.createCollection("user", function(err, res) {
-//       if (err) throw err;
-//       console.log("Collection created!");
-//       dbUser.close();
-//     });
-//   });
+// function initDb(addr = "", options = {}, callback) {
+//   MongoClient.connect(addr, options, callback);
+// }
 
-//   MongoClient.connect(urlRadio, function(err, dbRadio) {
-//     if (err) throw err;
-//     console.log("Radio database created!");
-//     var dbo = dbRadio.db("radioDB");
-//     dbo.createCollection("radio", function(err, res) {
-//       if (err) throw err;
-//       console.log("Collection created!");
-//       dbRadio.close();
-//     });
-//   });
-
-//   MongoClient.connect(urlLog, function(err, dbLog) {
-//     if (err) throw err;
-//     console.log("Log database created!");
-//     var dbo = dbLog.db("logDB");
-//     dbo.createCollection("log", function(err, res) {
-//       if (err) throw err;
-//       console.log("Collection created!");
-//       dbLog.close();
-//     });
-//   });
+app.listen(3000 || process.env.PORT, () => console.log("Server is running..."));
 
 app.use(
   bodyParser.urlencoded({
@@ -46,26 +21,37 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-    console.log("begin")
-    MongoClient.connect(urlRadio, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    }, (err, client) => {
-    if (err) {
-      console.error(err)
-      return
-    }
-    const db = client.db('radioDB')
-    const collection = db.collection('radio')
-    collection.find().toArray((err, items) => {
-      console.log(items)
-      res.send(items)
-    })
-  })
-})
+  res.redirect("/api");
+});
+
+app.get("/api", (req, res) => {
+  res.json({
+    message: "Welcome to the API!"
+  });
+});
+
+app.route("/api/radios").get(Radio.get_radios);
+
+app.get("/api/radios/:id", Radio.get_radio);
+
+app.get("/api/radios/:id/:type", Radio.update_radio);
+
+app.get("/api/users", (req, res) => {
+  // get all users
+});
+
+app.get("/api/users/:id", (req, res) => {
+  // get one user
+});
+
+app.get("/api/logs", (req, res) => {
+  // get logs
+});
+
+app.get("/api/logs/:id", (req, res) => {
+  // get one log
+});
 
 app.get("/radio", (req, res) => {
-    res.send("radio")
-})
-
-app.listen(process.env.PORT || 3000, () => console.log("Server is running"));
+  res.send("radio");
+});
