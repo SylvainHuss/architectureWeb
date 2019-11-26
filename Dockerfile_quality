@@ -1,0 +1,4 @@
+FROM python
+
+RUN apt update && apt install -y nano cron
+RUN echo "* * * * * root python /home/quality.py > /home/backup.log 2>&1" > /etc/crontab

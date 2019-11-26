@@ -2,9 +2,9 @@ const app = require("express")();
 const bodyParser = require("body-parser");
 const MongoClient = require('mongodb').MongoClient;
 
-var urlUser = "mongodb://72.16.0.2:27017/userDB";
-var urlRadio = "mongodb://72.16.0.3:27017/radioDB";
-var urlLog = "mongodb://72.16.0.4:27017/logDB";
+var urlUser = "mongodb://172.16.0.2:27017/userDB";
+var urlRadio = "mongodb://172.16.0.3:27017/radioDB";
+var urlLog = "mongodb://172.16.0.4:27017/logDB";
 
 // MongoClient.connect(urlUser, function(err, dbUser) {
 //     if (err) throw err;
@@ -59,6 +59,7 @@ app.get("/", (req, res) => {
     const collection = db.collection('radio')
     collection.find().toArray((err, items) => {
       console.log(items)
+      res.send(items)
     })
   })
 })

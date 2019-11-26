@@ -72,7 +72,9 @@ services:
 
    quality:
       container_name: quality
-      image: python
+      build:
+        context: .
+        dockerfile: Dockerfile_quality
       stdin_open: true
       tty: true
       # restart: always      
