@@ -26,12 +26,13 @@ function get_radios(req, res) {
 }
 
 function update_radio(req, res) {
-  const { id, type } = req.params;
+  const { id, state } = req.params;
   const idxRadio = radios.findIndex(item => item.id === id);
-  if (type === "neg") {
-    radios[idxRadio]["n"] -= 1;
-  }
-  if (type === "pos") {
+  if (state === "down") {
+    radios[idxRadio]["N"] += 1;
+  } 
+  if (state === "up") {
+    radios[idxRadio]["n"] += 1;
     radios[idxRadio]["N"] += 1;
   }
   res.json(radios[idxRadio]);
