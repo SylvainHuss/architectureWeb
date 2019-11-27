@@ -1,4 +1,7 @@
 FROM python
 
 RUN apt update && apt install -y nano cron && pip install requests
-RUN echo "* * * * * root python /home/quality.py > /home/backup.log 2>&1" > /etc/crontab
+
+RUN touch /var/spool/cron/crontabs/root && \
+    crontab /var/spool/cron/crontabs/root && \
+    echo "* * * * * /home/script.sh >> /home/backup.log" >> /var/spool/cron/crontabs/root
