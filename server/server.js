@@ -1,16 +1,6 @@
 const app = require("express")();
-const fs = require("fs");
 const bodyParser = require("body-parser");
-const MongoClient = require("mongodb").MongoClient;
 const Radio = require("./models/Radio");
-
-const urlUser = "mongodb://root:123@172.16.0.2:27017/";
-const urlRadio = "mongodb://root:123@172.16.0.3:27017/";
-const urlLog = "mongodb://172.16.0.4:27017/";
-
-// function initDb(addr = "", options = {}, callback) {
-//   MongoClient.connect(addr, options, callback);
-// }
 
 app.listen(3000 || process.env.PORT, () => console.log("Server is running..."));
 
