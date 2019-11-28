@@ -22,9 +22,14 @@ app.get("/api", (req, res) => {
 
 app.route("/api/radios").get(Radio.get_radios);
 
-app.get("/api/radios/:id", Radio.get_radio);
-
-app.get("/api/radios/:id/:state", Radio.update_radio);
+app.route("/api/radios/:id").get((req, res) => {
+  const queries = req.query;
+  if (Object.keys(queries).length) {
+    Radio.update_radio(req, res);
+  } else {
+    Radio.get_radio(req, res);
+  }
+});
 
 app.get("/api/users", (req, res) => {
   // get all users

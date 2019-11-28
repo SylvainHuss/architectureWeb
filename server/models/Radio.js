@@ -28,7 +28,8 @@ function get_radios(req, res) {
 }
 
 function update_radio(req, res) {
-  const { id, state } = req.params;
+  const { id } = req.params;
+  const { state } = req.query;
   let action;
   if (state === "down") {
     // radio is down => update total
