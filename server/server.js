@@ -1,14 +1,14 @@
 const app = require("express")();
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const Radio = require("./models/Radio");
-
-app.listen(3000 || process.env.PORT, () => console.log("Server is running..."));
 
 app.use(
   bodyParser.urlencoded({
     extended: true
   })
 );
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.redirect("/api");
@@ -22,9 +22,14 @@ app.get("/api", (req, res) => {
 
 app.route("/api/radios").get(Radio.get_radios);
 
-app.get("/api/radios/:id", Radio.get_radio);
-
-app.get("/api/radios/:id/:state", Radio.update_radio);
+app.route("/api/radios/:id").get((req, res) => {
+  const queries = req.query;
+  if (Object.keys(queries).length) {
+    Radio.update_radio(req, res);
+  } else {
+    Radio.get_radio(req, res);
+  }
+});
 
 app.get("/api/users", (req, res) => {
   // get all users
@@ -45,3 +50,5 @@ app.get("/api/logs/:id", (req, res) => {
 app.get("/radio", (req, res) => {
   res.send("radio");
 });
+
+app.listen(3000 || process.env.PORT, () => console.log("Server is running..."));
