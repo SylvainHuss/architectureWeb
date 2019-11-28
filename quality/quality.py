@@ -18,11 +18,11 @@ try:
         
         try:
             r = requests.get(radioUrl, timeout=5, verify=False, stream=True)
-            r = requests.get("http://172.16.0.6:3000/api/radios/" + str(id) + "/up", timeout=5, verify=False, stream=True)
+            r = requests.get("http://172.16.0.6:3000/api/radios/" + str(id) + "?state=up", timeout=5, verify=False, stream=True)
             print (radioName + " is up")
 
         except:
-            requests.get("http://172.16.0.6:3000/api/radios/" + str(id) + "/down", timeout=5, verify=False, stream=True)
+            requests.get("http://172.16.0.6:3000/api/radios/" + str(id) + "?state=down", timeout=5, verify=False, stream=True)
             print (radioName + " is down")
         
         print (", ")
