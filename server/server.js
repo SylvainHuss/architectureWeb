@@ -22,6 +22,8 @@ app.get("/api", (req, res) => {
 
 app.route("/api/radios").get(Radio.get_radios);
 
+app.get("/api/radios/clear", Radio.clear_radios);
+
 app.route("/api/radios/:id").get((req, res) => {
   const queries = req.query;
   if (Object.keys(queries).length) {
