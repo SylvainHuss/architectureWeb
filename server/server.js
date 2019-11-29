@@ -47,8 +47,10 @@ app.get("/api/logs/:id", (req, res) => {
   // get one log
 });
 
-app.get("/radio", (req, res) => {
-  res.send("radio");
+app.get("*", (req, res) => {
+  res.json({
+    message: "Nothing to see here :("
+  })
 });
 
 app.listen(3000 || process.env.PORT, () => console.log("Server is running..."));
