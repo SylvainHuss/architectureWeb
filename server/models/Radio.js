@@ -11,12 +11,19 @@ MongoClient.connect(
   }
 );
 
+/**
+ * generic find function
+ */
 function find_by(filter, callback) {
   db.collection("radios")
     .find(filter)
+    .sort({ title: 1 })
     .toArray(callback);
 }
 
+/**
+ * get specific radios
+ */
 function get_radio(req, res) {
   // /api/radios/:id
   const { id } = req.params;
@@ -26,6 +33,9 @@ function get_radio(req, res) {
   });
 }
 
+/**
+ * get radios with a specific query
+ */
 function get_radios(req, res) {
   const queries = req.query;
   if (queries.type === "all" || !Object.keys(queries).length) {
@@ -41,6 +51,9 @@ function get_radios(req, res) {
   }
 }
 
+/**
+ * get all radios
+ */
 function get_all_radios(req, res) {
   find_by({}, (err, docs) => {
     if (err) throw err;
@@ -48,6 +61,9 @@ function get_all_radios(req, res) {
   });
 }
 
+/**
+ * get only untested radios (N == 0)
+ */
 function get_untested_radios(req, res) {
   find_by({ N: 0 }, (err, docs) => {
     if (err) throw err;
@@ -55,13 +71,41 @@ function get_untested_radios(req, res) {
   });
 }
 
+/**
+ * get working radios (where working == true)
+ */
 function get_working_radios(req, res) {
-  // algorithm for working radios...
+  find_by({ current_status: true }, (err, docs) => {
+    if (err) throw err;
+    res.json(docs);
+  });
 }
 
+/**
+ * clear N and n if N or n > 0
+ */
+function clear_radios(req, res) {
+  db.collection("radios").updateMany(
+    {
+      $or: [{ N: { $gt: 0 } }, { n: { $gt: 0 } }]
+    },
+    { $set: { N: 0, n: 0 } },
+    (err, docs) => {
+      if (err) console.log(err);
+      res.json({
+        ok: docs.result.ok,
+        nModified: docs.result.nModified
+      });
+    }
+  );
+}
+
+/**
+ * update N and/or n by 1
+ */
 function update_radio(req, res) {
   const { id } = req.params;
-  const { state } = req.query;
+  const { state, status } = req.query;
   let action;
   if (state === "down") {
     // radio is down => update total
@@ -85,5 +129,6 @@ function update_radio(req, res) {
 module.exports = {
   get_radio,
   get_radios,
-  update_radio
+  update_radio,
+  clear_radios
 };
