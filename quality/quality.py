@@ -4,11 +4,14 @@ import requests
 import json
 from random import *
 from datetime import datetime
+import pytz
+
+date = datetime.now(pytz.timezone('Europe/Amsterdam')).strftime("%d/%m/%Y %H:%M:%S") + " - "
 
 try:
     r = requests.get("http://172.16.0.6:3000/api/radios", timeout=5, verify=False, stream=True)
     length = len(r.json())
-    print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " - ")
+    log = date
 
     for i in range (0,3):
         id = randint(0,length)
@@ -19,13 +22,16 @@ try:
         try:
             r = requests.get(radioUrl, timeout=5, verify=False, stream=True)
             r = requests.get("http://172.16.0.6:3000/api/radios/" + str(id) + "?state=up", timeout=5, verify=False, stream=True)
-            print (radioName + " is up")
+            log = log + radioName + " is up"
 
         except:
-            requests.get("http://172.16.0.6:3000/api/radios/" + str(id) + "?state=down", timeout=5, verify=False, stream=True)
-            print (radioName + " is down")
+            r = requests.get("http://172.16.0.6:3000/api/radios/" + str(id) + "?state=down", timeout=5, verify=False, stream=True)
+            log = log + radioName + " is down"            
         
-        print (", ")
+        if (i!=2):
+            log = log + ", "
+    
+    print (log)
 
 except:
-    print ("API disconnected")
+    print (date + "API disconnected")
