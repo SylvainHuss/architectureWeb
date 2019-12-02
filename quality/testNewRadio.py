@@ -24,7 +24,10 @@ try:
         except:
             r = requests.get("http://172.16.0.6:3000/api/radios/" + str(radio['_id']) + "?state=down", timeout=5, verify=False, stream=True)
     
-    print (date + "All the radios have been tested - " + str(radioWorkingNumber) + "/" + str(testedRadioNumber) + " radios working")
+    if (testedRadioNumber==0):
+        print (date + "All the radios are already tested")
+    else:
+        print (date + "All the radios have been tested - " + str(radioWorkingNumber) + "/" + str(testedRadioNumber) + " radios working")
 
 except:
     print (date + "API disconnected")
