@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+
+# todo : backup db
 import requests
 import json
 from random import *
