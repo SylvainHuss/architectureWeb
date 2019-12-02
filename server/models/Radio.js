@@ -21,6 +21,15 @@ function find_by(filter, callback) {
     .toArray(callback);
 }
 
+function update_one(filter, update, callback) {
+  db.collection("radios").findOneAndUpdate(
+    filter,
+    update,
+    { returnOriginal: false },
+    callback
+  );
+}
+
 /**
  * get specific radios
  */
@@ -105,25 +114,38 @@ function clear_radios(req, res) {
  */
 function update_radio(req, res) {
   const { id } = req.params;
-  const { state, status } = req.query;
-  let action;
+  const { state, valid } = req.query;
+  if (state !== undefined) update_state(id, res, state);
+  if (valid !== undefined) update_valid(id, res, valid);
+}
+
+/**
+ * update the state of a radio
+ */
+function update_state(id, res, state) {
+  let score = {};
   if (state === "down") {
     // radio is down => update total
-    action = { N: 1 };
+    score = { N: 1 };
   }
   if (state === "up") {
-    // radio is up => update total and inc working
-    action = { N: 1, n: 1 };
+    // radio is up => update total and inc working radio
+    score = { N: 1, n: 1 };
   }
-  db.collection("radios").findOneAndUpdate(
-    { _id: id },
-    { $inc: action },
-    { returnOriginal: false },
-    (err, doc) => {
-      if (err) throw err;
-      res.json(doc.value);
-    }
-  );
+  update_one({ _id: id }, { $inc: score }, (err, docs) => {
+    if (err) throw err;
+    res.json(docs);
+  });
+}
+
+/**
+ * update the validy of a radio
+ */
+function update_valid(id, res, validity) {
+  update_one({ _id: id }, { current_status: validity }, (err, docs) => {
+    if (err) throw err;
+    res.json(docs);
+  });
 }
 
 module.exports = {
