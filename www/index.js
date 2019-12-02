@@ -2,6 +2,7 @@ const player = document.querySelector(".player");
 const selector = document.querySelector(".selector");
 const input = document.querySelector("input");
 const current = document.querySelector(".current");
+const ratios = document.querySelector(".ratios");
 let radioList;
 let audio;
 let radios;
@@ -20,7 +21,7 @@ function fillSelect() {
   radios.map(radio => {
     const option = document.createElement("option");
     option.value = radio.url;
-    option.textContent = radio.title;
+    option.textContent = `${radio.title} -- ${radio.n} / ${radio.N}`;
     radioList.appendChild(option);
   });
 }
