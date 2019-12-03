@@ -2,6 +2,7 @@ const app = require("express")();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const Radio = require("./models/Radio");
+const User = require("./models/User");
 
 app.use(
   bodyParser.urlencoded({
@@ -33,13 +34,9 @@ app.route("/api/radios/:id").get((req, res) => {
   }
 });
 
-app.get("/api/users", (req, res) => {
-  // get all users
-});
+app.get("/api/users", User.get_users);
 
-app.get("/api/users/:id", (req, res) => {
-  // get one user
-});
+app.get("/api/users/:id", User.get_user);
 
 app.get("/api/logs", (req, res) => {
   // get logs
