@@ -1,8 +1,0 @@
-FROM python
-
-RUN apt update && apt install -y nano cron && pip install requests pytz datetime
-
-RUN touch /var/spool/cron/crontabs/root && \
-    crontab /var/spool/cron/crontabs/root && \
-    echo "* * * * * /usr/local/bin/python /home/quality.py >> /home/backup.log" >> /var/spool/cron/crontabs/root && \
-    echo "*/5 * * * * /home/testScript.sh >> /home/backup.log" >> /var/spool/cron/crontabs/root

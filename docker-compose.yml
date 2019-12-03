@@ -74,13 +74,14 @@ services:
       container_name: quality
       build:
         context: .
-        dockerfile: Dockerfile_quality
+        dockerfile: ./docker_quality_file/Dockerfile_quality
       stdin_open: true
       tty: true
       # restart: always      
       # command: service cron start
       volumes:
         - './quality:/home'
+        - './database_backup:/database'
       networks:
          net:
             ipv4_address: 172.16.0.7
