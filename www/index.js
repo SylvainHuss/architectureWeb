@@ -1,17 +1,34 @@
+const user = document.querySelector(".user");
 const player = document.querySelector(".player");
 const selector = document.querySelector(".selector");
 const input = document.querySelector("input");
 const current = document.querySelector(".current");
 const ratios = document.querySelector(".ratios");
+const like = document.querySelector("button");
 let radioList;
 let audio;
 let radios;
 let allRadios;
 let options;
 
+const currentUserId = "2";
+let currentUser;
+
 async function getRadios() {
   const result = await fetch("http://localhost:3000/api/radios");
   return result.json();
+}
+
+async function addFavorite(id) {
+  const favorite = await fetch(
+    `http://localhost:3000/api/users/${currentUserId}?fav=${id}`
+  );
+  return favorite.json();
+}
+
+async function getUser() {
+  const user = await fetch(`http://localhost:3000/api/users/${currentUserId}`);
+  return user.json();
 }
 
 function fillSelect() {
@@ -21,6 +38,7 @@ function fillSelect() {
   radios.map(radio => {
     const option = document.createElement("option");
     option.value = radio.url;
+    option.setAttribute("id", radio._id);
     option.textContent = `${radio.title} -- ${radio.n} / ${radio.N}`;
     radioList.appendChild(option);
   });
@@ -29,9 +47,11 @@ function fillSelect() {
 async function initSelect() {
   radios = await getRadios();
   allRadios = await getRadios();
+  currentUser = await getUser();
   fillSelect(allRadios);
   audio.src = localStorage.getItem("current_radio");
   current.textContent = localStorage.getItem("current_radio_title");
+  user.textContent = currentUser.name;
   attachEventListeners();
 }
 
@@ -40,8 +60,15 @@ function attachEventListeners() {
     audio.src = ev.target.value;
     audio.play();
     current.textContent = options[radioList.selectedIndex].text;
-    localStorage.setItem("current_radio_title", options[radioList.selectedIndex].text)
+    localStorage.setItem(
+      "current_radio_title",
+      options[radioList.selectedIndex].text
+    );
     localStorage.setItem("current_radio", audio.src);
+  };
+
+  like.onclick = ev => {
+    addFavorite()
   };
 
   input.oninput = ev => {

@@ -40,11 +40,21 @@ function get_user(req, res) {
   const { id } = req.params;
   find_by({ _id: id }, (err, docs) => {
     if (err) throw err;
+    res.json(docs[0]);
+  });
+}
+
+function add_favorite(req, res) {
+  const { fav } = req.query;
+  const { user } = req.params;
+  update_one({ id: user }, { $addToSet: { favorites: fav } }, (err, docs) => {
+    if (err) throw err;
     res.json(docs);
   });
 }
 
 module.exports = {
   get_users,
-  get_user
+  get_user,
+  add_favorite
 };

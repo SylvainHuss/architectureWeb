@@ -36,7 +36,14 @@ app.route("/api/radios/:id").get((req, res) => {
 
 app.get("/api/users", User.get_users);
 
-app.get("/api/users/:id", User.get_user);
+app.get("/api/users/:id", (req, res) => {
+  const queries = req.query;
+  if (Object.keys(queries).length) {
+    User.add_favorite(req, res);
+  } else {
+    User.get_user(req, res);
+  }
+});
 
 app.get("/api/logs", (req, res) => {
   // get logs
