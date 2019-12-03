@@ -134,7 +134,7 @@ function update_state(id, res, state) {
   }
   update_one({ _id: id }, { $inc: score }, (err, docs) => {
     if (err) throw err;
-    res.json(docs);
+    res.json(docs.value);
   });
 }
 
