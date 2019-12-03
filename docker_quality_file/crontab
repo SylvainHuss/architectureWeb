@@ -1,0 +1,3 @@
+* * * * * /usr/local/bin/python /home/quality.py >> /home/backup.log
+*/5 * * * * /home/testScript.sh >> /home/backup.log
+0 12 * * 1 /home/databaseBackup.sh >> /home/backup.log
