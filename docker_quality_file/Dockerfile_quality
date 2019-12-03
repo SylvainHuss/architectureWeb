@@ -1,5 +1,5 @@
 FROM python
 
-COPY ./crontab /var/spool/cron/crontabs/root
+COPY ./docker_quality_file/crontab /var/spool/cron/crontabs/root
 RUN apt update && apt install -y nano cron mongo-tools && pip install requests pytz datetime
 RUN touch /var/spool/cron/crontabs/root && crontab /var/spool/cron/crontabs/root
