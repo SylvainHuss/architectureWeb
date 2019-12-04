@@ -5,6 +5,9 @@ services:
       container_name: userDB
       image: mongo
       restart: always
+      build:
+        context: .
+        dockerfile: ./Dockerfiles/Dockerfile_dbs
       environment:
         MONGO_INITDB_ROOT_USERNAME: root
         MONGO_INITDB_ROOT_PASSWORD: 123
@@ -18,6 +21,9 @@ services:
       container_name: radioDB
       image: mongo
       restart: always
+      build:
+        context: .
+        dockerfile: ./Dockerfiles/Dockerfile_dbs
       environment:
         MONGO_INITDB_ROOT_USERNAME: root
         MONGO_INITDB_ROOT_PASSWORD: 123
@@ -74,7 +80,7 @@ services:
       container_name: quality
       build:
         context: .
-        dockerfile: ./docker_quality_file/Dockerfile_quality
+        dockerfile: ./Dockerfiles/Dockerfile_quality
       stdin_open: true
       tty: true
       # restart: always      

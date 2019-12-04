@@ -1,0 +1,5 @@
+FROM mongo
+
+COPY ./server/base_users.json .
+COPY ./server/base_radios.json .
+
