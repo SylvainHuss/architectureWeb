@@ -1,13 +1,19 @@
+all: up db
+
 up:
-	sudo docker-compose up -d
-	nohup sudo docker exec API npm run --prefix /usr/app/ watch > ./server/output.log &
+	docker-compose up -d
+	nohup docker exec API npm run --prefix /usr/app/ watch > ./server/output.log &
 	@echo "API server is running!"
-	sudo docker exec quality service cron start
+	docker exec quality service cron start
+
+db:
+	docker exec radioDB mongoimport --authenticationDatabase admin --mode merge -u root -p 123 -d radios -c radios --file ./base_radios.json
+	docker exec userDB mongoimport --authenticationDatabase admin --mode merge -u root -p 123 -d users -c users --file ./base_users.json
 
 down:
-	sudo docker-compose down
+	docker-compose down
 
 restart: down up
 
 cron_reload:
-	docker cp ./docker_quality_file/crontab quality:/var/spool/cron/crontabs/root
+	docker cp ./Dockerfiles/crontab quality:/var/spool/cron/crontabs/root
