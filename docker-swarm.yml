@@ -1,0 +1,140 @@
+version: '3.7'
+services:
+
+   userDB:
+      # container_name: userDB
+      image: mongo
+      restart: always
+      build:
+        context: .
+        dockerfile: ./Dockerfiles/Dockerfile_dbs
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: 123
+      volumes:
+        - '/srv/architecture/data/user:/data/db'
+      deploy:
+        mode: global
+        placement:
+          constraints: [node.role == worker]
+      networks:
+         net:
+            ipv4_address: 172.16.0.2
+
+   radioDB:
+      # container_name: radioDB
+      image: mongo
+      restart: always
+      build:
+        context: .
+        dockerfile: ./Dockerfiles/Dockerfile_dbs
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: 123
+      deploy:
+        mode: global
+        placement:
+          constraints: [node.role == worker]
+      volumes:
+        - '/srv/architecture/data/radio:/data/db'
+      networks:
+         net:
+            ipv4_address: 172.16.0.3
+
+   logDB:
+      # container_name: logDB
+      image: mongo
+      restart: always
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: 123
+      volumes:
+        - '/srv/architecture/data/log:/data/db'
+      deploy:
+        mode: global
+        placement:
+          constraints: [node.role == worker]        
+      networks:
+         net:
+            ipv4_address: 172.16.0.4
+
+   web:
+      # container_name: web
+      image: httpd
+      restart: always      
+      ports:
+        - '8888:80'  
+      volumes:
+        - './www/:/usr/local/apache2/htdocs/'
+      deploy:
+        mode: global
+        placement:
+          constraints: [node.role == manager]
+      networks:
+         net:
+            ipv4_address: 172.16.0.5
+
+   API:
+      # container_name: API
+      image: node
+      stdin_open: true
+      tty: true
+      # restart: always   
+      ports:   
+        - '3000:3000'
+      depends_on:
+        - userDB
+        - radioDB
+        - logDB
+      volumes:
+        - './server:/usr/app/'
+      deploy:
+        mode: global
+        placement:
+          constraints: [node.role == manager]        
+      networks:
+         net:
+            ipv4_address: 172.16.0.6
+
+   quality:
+      # container_name: quality
+      image: architectureweb_quality
+      stdin_open: true
+      tty: true
+      # restart: always      
+      # command: service cron start
+      volumes:
+        - './quality:/home'
+        - './database_backup:/database'
+      deploy:
+        mode: global
+        placement:
+          constraints: [node.role == manager]        
+      networks:
+         net:
+            ipv4_address: 172.16.0.7
+
+   portainer:
+      # container_name: portainer
+      image: portainer/portainer
+      restart: always
+      ports:
+        - '9000:9000'
+      volumes:
+        - '/var/run/docker.sock:/var/run/docker.sock'
+        - '/srv/portainer_data:/data'
+      deploy:
+        mode: global
+        placement:
+          constraints: [node.role == manager]      
+      networks:
+        net:
+          ipv4_address: 172.16.0.8
+
+
+networks:
+   net:
+      ipam:
+        driver: default
+        config:
+          - subnet: 172.16.0.0/16
