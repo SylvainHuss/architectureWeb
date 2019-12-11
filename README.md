@@ -19,3 +19,10 @@ make all
 - `localhost:8888/`: l'application
 
 Si tout se passe bien, le site doit tourner et le menu pour choisir une radio doit être rempli.
+
+## Swarm
+
+- Pour le manager : `docker swarm init`
+- Pour les workers : `docker swarm join --token xxx-x-xxx {ip adress}`
+- Pour lancer le serveur : `make up`
+`
