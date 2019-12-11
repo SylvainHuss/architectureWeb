@@ -10,7 +10,7 @@ date = datetime.now(pytz.timezone('Europe/Amsterdam')).strftime("%d/%m/%Y %H:%M:
 
 try:
     # Get untested radios
-    r = requests.get("http://172.16.0.6:3000/api/radios?type=untested", timeout=5, verify=False, stream=True)
+    r = requests.get("http://teststack_API:3000/api/radios?type=untested", timeout=5, verify=False, stream=True)
 
     radioWorkingNumber = 0
     testedRadioNumber = len(r.json())
@@ -19,10 +19,10 @@ try:
         # Test radio url
         try:
             r = requests.get(radio['url'], timeout=3, verify=False, stream=True)
-            r = requests.get("http://172.16.0.6:3000/api/radios/" + str(radio['_id']) + "?state=up", timeout=5, verify=False, stream=True)
+            r = requests.get("http://teststack_API:3000/api/radios/" + str(radio['_id']) + "?state=up", timeout=5, verify=False, stream=True)
             radioWorkingNumber += 1
         except:
-            r = requests.get("http://172.16.0.6:3000/api/radios/" + str(radio['_id']) + "?state=down", timeout=5, verify=False, stream=True)
+            r = requests.get("http://teststack_API:3000/api/radios/" + str(radio['_id']) + "?state=down", timeout=5, verify=False, stream=True)
     
     if (testedRadioNumber==0):
         print (date + "All the radios are already tested")
