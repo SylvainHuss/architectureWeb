@@ -13,6 +13,6 @@ do
     fi
 done
 
-nohup docker exec $api_name npm run --prefix /usr/app/ watch > ./server/output.log &
-echo "API server is running!"
-docker exec $quality_name service cron start
+# nohup docker exec $api_name npm run --prefix /usr/app/ watch > ./server/output.log &
+# echo "API server is running!"
+# docker exec $quality_name service cron start

@@ -98,7 +98,7 @@ services:
 
    quality:
       # container_name: quality
-      image: architectureweb_quality
+      image: sylvainhuss/quality
       stdin_open: true
       tty: true
       # restart: always      
@@ -109,7 +109,7 @@ services:
       deploy:
         mode: global
         placement:
-          constraints: [node.role == manager]        
+          constraints: [node.role == worker]
       networks:
          net:
             ipv4_address: 172.16.0.7
